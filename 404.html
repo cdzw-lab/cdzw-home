@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 — 页面不存在 | 超导智网 cdzw.ai</title>
+<meta name="description" content="找不到该页面。返回超导智网首页，了解基于分布式账本的软件定义计算机。">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05070f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark light">
 
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b1020'/><path d='M16 16V7M16 16l8 5M16 16l-8 5' stroke='%235b8cff' stroke-width='1.6'/><circle cx='16' cy='16' r='3.4' fill='%2322d3ee'/><circle cx='16' cy='7' r='2.1' fill='%235b8cff'/><circle cx='24' cy='21' r='2.1' fill='%235b8cff'/><circle cx='8' cy='21' r='2.1' fill='%235b8cff'/></svg>">
+
+<script>
+(function () {
+  var d = document.documentElement;
+  d.classList.add('js');
+  var t = null;
+  try { t = localStorage.getItem('cdzw-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    var m = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)');
+    t = (m && m.matches) ? 'light' : 'dark';
+  }
+  d.setAttribute('data-theme', t);
+})();
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-arrow" viewBox="0 0 24 24">
+    <path d="M4.6 12h14.2M13 6.2l5.8 5.8-5.8 5.8"/>
+  </symbol>
+</svg>
+
+<main class="e404">
+  <span class="e404__glow" aria-hidden="true"></span>
+
+  <div class="e404__inner">
+    <a class="logo" href="/" aria-label="超导智网首页">
+      <span class="logo__mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 12V4.4M12 12l6.6 4.1M12 12l-6.6 4.1"/>
+          <circle cx="12" cy="12" r="2.7" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="4.4" r="1.7" fill="currentColor" stroke="none"/>
+          <circle cx="18.6" cy="16.1" r="1.7" fill="currentColor" stroke="none"/>
+          <circle cx="5.4" cy="16.1" r="1.7" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      超导智网
+    </a>
+
+    <p class="e404__code">404</p>
+    <h1>这个地址上没有内容</h1>
+    <p class="lede">页面可能已被移动或删除。你可以回到首页，从核心特征开始了解超导智网。</p>
+
+    <div class="e404__actions">
+      <a class="btn btn--primary" href="/">
+        返回首页
+        <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
+      </a>
+      <a class="btn btn--ghost" href="/#products">查看核心产品</a>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
