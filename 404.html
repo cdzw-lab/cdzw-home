@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 项目页部署在 /cdzw-home/ 子路径下；而 404 会在任意深度的错误 URL 上被服务，
+     相对路径会解析到错误目录。用 <base> 固定站点根，一处即可切换。
+     将来启用 cdzw.ai 根域名时，把 href 改成 "/" 即可。 -->
+<base href="/cdzw-home/">
 <title>404 — 页面不存在 | 超导智网 cdzw.ai</title>
 <meta name="description" content="找不到该页面。返回超导智网首页，了解基于分布式账本的软件定义计算机。">
 <meta name="robots" content="noindex">
@@ -40,7 +44,7 @@
   <span class="e404__glow" aria-hidden="true"></span>
 
   <div class="e404__inner">
-    <a class="logo" href="/" aria-label="超导智网首页">
+    <a class="logo" href="./" aria-label="超导智网首页">
       <span class="logo__mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 12V4.4M12 12l6.6 4.1M12 12l-6.6 4.1"/>
@@ -58,11 +62,11 @@
     <p class="lede">页面可能已被移动或删除。你可以回到首页，从核心特征开始了解超导智网。</p>
 
     <div class="e404__actions">
-      <a class="btn btn--primary" href="/">
+      <a class="btn btn--primary" href="./">
         返回首页
         <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
       </a>
-      <a class="btn btn--ghost" href="/#products">查看核心产品</a>
+      <a class="btn btn--ghost" href="./#products">查看核心产品</a>
     </div>
   </div>
 </main>
