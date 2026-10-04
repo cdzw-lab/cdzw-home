@@ -182,7 +182,6 @@ button { font: inherit; color: inherit; }
   margin-bottom: 60px;
 }
 .section-head h2,
-.about__text h2,
 .cta__text h2 {
   font-size: clamp(28px, 3.6vw, 42px);
 }
@@ -713,117 +712,6 @@ button { font: inherit; color: inherit; }
 }
 
 /* ===================================================
-   体系结构
-   =================================================== */
-.about {
-  display: grid;
-  grid-template-columns: 1.02fr .98fr;
-  gap: 68px;
-  align-items: center;
-}
-.about__text .lede { margin-top: 22px; }
-
-.checklist {
-  display: grid;
-  gap: 14px;
-  margin: 32px 0 36px;
-  padding: 0;
-  list-style: none;
-}
-.checklist li {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  font-size: 15.5px;
-  color: var(--text-2);
-}
-.checklist li .ico {
-  width: 18px;
-  height: 18px;
-  margin-top: .3em;
-  color: var(--accent-2);
-  flex: none;
-}
-
-/* ---------- 架构卡 ---------- */
-.arch {
-  position: relative;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--bg-2);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-.arch__bar {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-}
-.arch__bar span { width: 11px; height: 11px; border-radius: 50%; }
-.arch__bar span:nth-child(1) { background: #ff5f57; }
-.arch__bar span:nth-child(2) { background: #febc2e; }
-.arch__bar span:nth-child(3) { background: #28c840; }
-.arch__bar em {
-  margin-left: 8px;
-  font-family: var(--mono);
-  font-size: 12.5px;
-  font-style: normal;
-  letter-spacing: .04em;
-  color: var(--muted);
-}
-
-.arch__layers {
-  margin: 0;
-  padding: 10px 0;
-  list-style: none;
-}
-.arch__layers li {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 16px;
-  align-items: baseline;
-  padding: 15px 22px;
-  border-bottom: 1px solid var(--border);
-  transition: background .25s ease;
-}
-.arch__layers li:last-child { border-bottom: 0; }
-.arch__layers li:hover { background: var(--surface); }
-
-.arch__k {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  color: var(--accent-2);
-}
-.arch__v {
-  font-size: 14.5px;
-  color: var(--text-2);
-}
-
-.arch__foot {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 22px;
-  border-top: 1px solid var(--border);
-  background: var(--surface);
-  font-size: 13px;
-  letter-spacing: .04em;
-  color: var(--muted);
-}
-.arch__pulse {
-  width: 8px;
-  height: 8px;
-  flex: none;
-  border-radius: 50%;
-  background: var(--accent-2);
-  animation: pulse 2.4s ease-out infinite;
-}
-
-/* ===================================================
    核心技术
    =================================================== */
 .tech-list {
@@ -873,26 +761,14 @@ button { font: inherit; color: inherit; }
 .tech__icon .ico { width: 22px; height: 22px; }
 .tech__body { position: relative; z-index: 1; }
 .tech__body h3 { font-size: 18px; margin-bottom: 11px; }
+
+/* 卡片只含标题时（内容严格取自 README，不做发挥）收掉尾部外边距 */
+.card h3:last-child,
+.product h3:last-child,
+.tech__body h3:last-child { margin-bottom: 0; }
 .tech__body p {
   font-size: 14.8px;
   line-height: 1.75;
-  color: var(--muted);
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.tags li {
-  padding: 4px 11px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 12px;
   color: var(--muted);
 }
 
@@ -920,15 +796,6 @@ button { font: inherit; color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-}
-.product__badge {
-  padding: 5px 13px;
-  border: 1px solid var(--ring);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 12px;
-  letter-spacing: .08em;
-  color: var(--accent-2);
 }
 .product h3 {
   position: relative;
@@ -1142,7 +1009,7 @@ a.contact-card:hover .contact-card__go {
   .hero__visual { max-width: 400px; margin: 0 auto; }
   .hero__copy { text-align: left; }
 
-  .about, .cta { grid-template-columns: 1fr; gap: 48px; }
+  .cta { grid-template-columns: 1fr; gap: 48px; }
   .cta { padding: 44px 34px; }
   .cta::after { top: auto; bottom: -60%; right: -30%; }
 
@@ -1207,8 +1074,6 @@ a.contact-card:hover .contact-card__go {
   .card, .product, .tech { padding: 26px 22px; }
   .cta { padding: 36px 24px; }
 
-  .arch__layers li { grid-template-columns: 1fr; gap: 4px; }
-
   .footer__top { grid-template-columns: 1fr; gap: 32px; }
   .footer { padding-top: 54px; }
   .footer__bottom { margin-top: 42px; }
@@ -1226,7 +1091,7 @@ a.contact-card:hover .contact-card__go {
     transition-duration: .001ms !important;
   }
   .js .reveal { opacity: 1; transform: none; }
-  .badge__dot, .arch__pulse { animation: none; }
+  .badge__dot { animation: none; }
 }
 
 /* ===================================================

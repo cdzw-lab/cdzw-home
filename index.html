@@ -113,9 +113,6 @@
     <circle cx="12" cy="12" r="9"/>
     <path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/>
   </symbol>
-  <symbol id="i-check" viewBox="0 0 24 24">
-    <path d="M4.8 12.6l4.6 4.6 9.8-10.4"/>
-  </symbol>
 </svg>
 
 <!-- ========== 导航 ========== -->
@@ -138,7 +135,6 @@
 
     <nav class="nav__links" id="navLinks" aria-label="主导航">
       <a href="#features">核心特征</a>
-      <a href="#about">体系结构</a>
       <a href="#tech">核心技术</a>
       <a href="#products">核心产品</a>
       <a href="#contact">联系我们</a>
@@ -184,7 +180,6 @@
 
         <p class="hero__sub reveal" style="--delay:.16s">
           超导智网是「基于分布式账本的软件定义计算机体系结构」的<strong>第一个具体实现</strong>。
-          它不是又一条区块链，而是一台真正的并行计算机 —— 计算与网络在这里不再分层，而是同一个系统的两种视角。
         </p>
 
         <div class="hero__actions reveal" style="--delay:.24s">
@@ -275,8 +270,7 @@
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">核心特征</span>
-        <h2>三个特征，重新定义<br>什么叫一台计算机</h2>
-        <p class="lede">这三点不是宣传词，而是这套体系结构在工程上的直接结论。</p>
+        <h2>软件定义计算机<br>三个特征</h2>
       </div>
 
       <div class="grid grid--3">
@@ -284,92 +278,29 @@
           <div class="card__icon"><svg class="ico" aria-hidden="true"><use href="#i-cpu"/></svg></div>
           <span class="card__index">01</span>
           <h3>真正的并行计算机系统</h3>
-          <p>不是把任务切碎后在单机里分时排队，而是让计算单元同时、真正地并行推进，并且可以持续横向扩展。</p>
         </article>
 
         <article class="card reveal" style="--delay:.08s" data-spotlight>
           <div class="card__icon"><svg class="ico" aria-hidden="true"><use href="#i-network"/></svg></div>
           <span class="card__index">02</span>
           <h3>计算机即网络，网络即计算机</h3>
-          <p>网络与计算机不再是被连接的两层。你在这一侧看到的是网络，在另一侧看到的就是计算机本身。</p>
         </article>
 
         <article class="card reveal" style="--delay:.16s" data-spotlight>
           <div class="card__icon"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></div>
           <span class="card__index">03</span>
           <h3>有心的计算机系统</h3>
-          <p>系统拥有统一的心跳与共识中心，在整体上协同一致，而不只是大量节点的简单堆叠。</p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ========== 体系结构 ========== -->
-  <section class="section section--soft" id="about">
-    <div class="container about">
-      <div class="about__text reveal">
-        <span class="eyebrow">体系结构</span>
-        <h2>四层结构，<br>一台完整的计算机</h2>
-        <p class="lede">
-          超导智网把账本、共识与网络收进同一套体系结构里：底层是并行计算，
-          其上是点对点网络，再往上是共识与账本，最上面才是账户、支付与各类服务。
-        </p>
-
-        <ul class="checklist">
-          <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>真正的并行计算机系统，原生支持横向扩展</li>
-          <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>网络与计算同构，不再有中心化的连接层</li>
-          <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>共识与账本内建于体系结构，而非外挂中间件</li>
-          <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>面向 Agent 时代的收付款与结算能力</li>
-        </ul>
-
-        <a class="btn btn--primary" href="#tech">
-          查看核心技术
-          <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
-        </a>
-      </div>
-
-      <div class="about__visual reveal" style="--delay:.12s">
-        <div class="arch" data-spotlight>
-          <div class="arch__bar">
-            <span></span><span></span><span></span>
-            <em>architecture</em>
-          </div>
-
-          <ul class="arch__layers">
-            <li>
-              <span class="arch__k">应用层</span>
-              <span class="arch__v">统一账户 · 微支付 · 流量分成 · 防护盾</span>
-            </li>
-            <li>
-              <span class="arch__k">共识层</span>
-              <span class="arch__v">一票否决共识 · 分布式账本</span>
-            </li>
-            <li>
-              <span class="arch__k">网络层</span>
-              <span class="arch__v">点对点网络 · 软件定义</span>
-            </li>
-            <li>
-              <span class="arch__k">计算层</span>
-              <span class="arch__v">真正的并行计算机系统</span>
-            </li>
-          </ul>
-
-          <div class="arch__foot">
-            <span class="arch__pulse"></span>
-            计算机即网络 · 网络即计算机
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ========== 核心技术 ========== -->
-  <section class="section" id="tech">
+  <section class="section section--soft" id="tech">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">核心技术</span>
-        <h2>四项底层技术</h2>
-        <p class="lede">它们共同支撑起这台计算机的运行方式，也是这套体系结构最难被复制的地方。</p>
+        <h2>四项核心技术</h2>
       </div>
 
       <div class="tech-list">
@@ -378,10 +309,7 @@
           <div class="tech__icon"><svg class="ico" aria-hidden="true"><use href="#i-coin"/></svg></div>
           <div class="tech__body">
             <h3>点对点支付技术</h3>
-            <p>支持微支付，支持批处理，实现了全流程无人化 —— 尤其适合用于 Agent 收付款。</p>
-            <ul class="tags">
-              <li>微支付</li><li>批处理</li><li>全流程无人化</li><li>Agent 结算</li>
-            </ul>
+            <p>支持微支付；支持批处理；实现了全流程无人化；尤其适合用于 Agent 收付款。</p>
           </div>
         </article>
 
@@ -390,10 +318,7 @@
           <div class="tech__icon"><svg class="ico" aria-hidden="true"><use href="#i-vote"/></svg></div>
           <div class="tech__body">
             <h3>抗垄断的共识协议</h3>
-            <p>采用一票否决机制：任何一方都无法在未被认可的情况下单方面改写共识结果。</p>
-            <ul class="tags">
-              <li>一票否决</li><li>抗垄断</li><li>无可单方改写</li>
-            </ul>
+            <p>一票否决机制。</p>
           </div>
         </article>
 
@@ -402,10 +327,6 @@
           <div class="tech__icon"><svg class="ico" aria-hidden="true"><use href="#i-book"/></svg></div>
           <div class="tech__body">
             <h3>防止财务造假的记账法</h3>
-            <p>把约束写进记账规则本身，在结构上杜绝单方篡改与虚假账目，而不是事后审计。</p>
-            <ul class="tags">
-              <li>结构防伪</li><li>规则内置</li><li>可验证</li>
-            </ul>
           </div>
         </article>
 
@@ -414,10 +335,6 @@
           <div class="tech__icon"><svg class="ico" aria-hidden="true"><use href="#i-layers"/></svg></div>
           <div class="tech__body">
             <h3>分布式账本</h3>
-            <p>全网共同维护同一份账本，不需要信任任何中心机构，账本本身就是事实来源。</p>
-            <ul class="tags">
-              <li>全网共维护</li><li>无需信任中心</li><li>单一事实来源</li>
-            </ul>
           </div>
         </article>
       </div>
@@ -425,65 +342,53 @@
   </section>
 
   <!-- ========== 核心产品 ========== -->
-  <section class="section section--soft" id="products">
+  <section class="section" id="products">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">核心产品</span>
-        <h2>四款产品，<br>覆盖账户、结算与防护</h2>
-        <p class="lede">它们建立在同一套体系结构之上，可以独立使用，也可以组合成完整的解决方案。</p>
+        <h2>四款核心产品</h2>
       </div>
 
       <div class="grid grid--2">
         <article class="product reveal" data-spotlight>
           <div class="product__head">
             <div class="card__icon"><svg class="ico" aria-hidden="true"><use href="#i-key"/></svg></div>
-            <span class="product__badge">账户</span>
           </div>
-          <h3>非中心化统一账户系统</h3>
-          <p>基于数字签名技术构建。账户由私钥掌控、归用户所有，无需依赖中心化机构托管，也无法被单方冻结或改写。</p>
+          <h3>基于数字签名技术的非中心化统一账户系统</h3>
         </article>
 
         <article class="product reveal" style="--delay:.08s" data-spotlight>
           <div class="product__head">
             <div class="card__icon"><svg class="ico" aria-hidden="true"><use href="#i-activity"/></svg></div>
-            <span class="product__badge">结算</span>
           </div>
-          <h3>可信流量分成服务</h3>
-          <p>基于微支付技术，按真实流量实时计量与结算。每一份贡献都可被度量、可被回报，分成过程公开可查。</p>
+          <h3>基于微支付技术的可信流量分成服务</h3>
         </article>
 
         <article class="product reveal" style="--delay:.16s" data-spotlight>
           <div class="product__head">
             <div class="card__icon"><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg></div>
-            <span class="product__badge">防护</span>
           </div>
-          <h3>抗 DDoS 防护盾服务</h3>
-          <p>借助网络结构本身分散并吸收攻击流量，把防护能力做成网络的固有属性，而不是叠加在边缘的清洗设备。</p>
+          <h3>抗 DDoS 的防护盾服务</h3>
         </article>
 
         <article class="product reveal" style="--delay:.24s" data-spotlight>
           <div class="product__head">
             <div class="card__icon"><svg class="ico" aria-hidden="true"><use href="#i-pulse"/></svg></div>
-            <span class="product__badge">心跳</span>
           </div>
           <h3>数字心脏服务</h3>
-          <p>为系统提供持续、统一的心跳与共识节律，让整台计算机作为一个整体稳定搏动，而不是各自为政的节点集合。</p>
         </article>
       </div>
     </div>
   </section>
 
   <!-- ========== 联系 ========== -->
-  <section class="section" id="contact">
+  <section class="section section--soft" id="contact">
     <div class="container">
       <div class="cta reveal" data-spotlight>
         <div class="cta__text">
           <span class="eyebrow">联系我们</span>
           <h2>想深入了解，<br>或者一起把它做出来</h2>
-          <p class="lede">
-            无论你是想了解这套体系结构的技术细节、评估在产品中使用它，
-            还是希望参与共建，都欢迎直接联系我们。
-          </p>
+          <p class="lede">想进一步了解，或者希望参与共建，欢迎直接联系我们。</p>
         </div>
 
         <div class="cta__cards">
@@ -541,7 +446,6 @@
       <div class="footer__col">
         <h4>导航</h4>
         <a href="#features">核心特征</a>
-        <a href="#about">体系结构</a>
         <a href="#tech">核心技术</a>
         <a href="#products">核心产品</a>
       </div>
