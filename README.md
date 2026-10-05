@@ -25,15 +25,4 @@
 
 官网源码位于 `gh-pages` 分支，当前部署在 GitHub Pages 项目页：
 
-- 访问地址：https://cdzw-lab.github.io/cdzw-home/
-
-### 切换到自有域名 cdzw.ai
-
-1. 在 `gh-pages` 分支根目录新增 `CNAME` 文件，内容为 `cdzw.ai`；
-2. 仓库 Settings → Pages → Custom domain 填入 `cdzw.ai`，并勾选 Enforce HTTPS；
-3. 把 `404.html` 里的 `<base href="/cdzw-home/">` 改成 `<base href="/">`；
-4. 把 `index.html` 里的 `canonical` 与 `og:url` 改回 `https://cdzw.ai/`。
-
-> ⚠️ `404.html` 里的 `<base>` 是项目页的关键：GitHub Pages 会在**任意深度**的错误
-> URL 上返回 `404.html`，若用相对路径，`style.css` 会解析到错误目录，404 页会掉样式。
-
+- 访问地址：https://cdzwlab.github.io/cdzw-home/
