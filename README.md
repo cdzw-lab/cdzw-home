@@ -25,7 +25,7 @@
 
 官网源码位于 `gh-pages` 分支，当前部署在 GitHub Pages 项目页：
 
-- 访问地址：https://cdzwlab.github.io/cdzw-home/
+- 访问地址：https://cdzw-lab.github.io/cdzw-home/
 
 ## 博客
 

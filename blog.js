@@ -187,6 +187,14 @@
 
         document.title = (post.title || post.slug) + ' | 超导智网';
 
+        // 所有文章共用 post.html，规范链接必须按文章改写。
+        // 从 location 推导而非写死域名，将来换自有域名无需改动。
+        var canon = document.querySelector('link[rel="canonical"]');
+        if (canon && /^https?:$/.test(window.location.protocol)) {
+          canon.setAttribute('href', window.location.origin + window.location.pathname +
+            '?p=' + encodeURIComponent(post.slug));
+        }
+
         // 较新 / 较早，而不是含糊的「上一篇 / 下一篇」
         var newer = posts[idx - 1];
         var older = posts[idx + 1];
