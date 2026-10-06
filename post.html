@@ -85,7 +85,7 @@
 </header>
 
 <main id="main">
-  <div class="container container--narrow">
+  <div class="container container--post">
     <a class="back-link" href="blog.html">
       <svg class="ico" aria-hidden="true"><use href="#i-arrow-back"/></svg>
       全部文章
@@ -93,10 +93,17 @@
 
     <div id="postStatus" class="state state--loading" aria-live="polite">正在载入文章…</div>
 
-    <article class="post" id="post" hidden>
-      <header class="post__header" id="postHeader"></header>
-      <div class="post__body prose" id="postBody"></div>
-    </article>
+    <div class="post-layout">
+      <article class="post" id="post" hidden>
+        <header class="post__header" id="postHeader"></header>
+        <div class="post__body prose" id="postBody"></div>
+      </article>
+
+      <aside class="toc" id="postToc" hidden aria-label="目录">
+        <p class="toc__title">目录</p>
+        <ol class="toc__list" id="tocList"></ol>
+      </aside>
+    </div>
 
     <nav class="post-pager" id="postPager" aria-label="上一篇 / 下一篇" hidden></nav>
   </div>

@@ -94,6 +94,7 @@
     <div class="hero__bg" aria-hidden="true">
       <span class="hero__grid"></span>
       <span class="hero__glow hero__glow--a"></span>
+      <span class="hero__glow hero__glow--b"></span>
     </div>
     <div class="container page-head__inner">
       <span class="eyebrow">博客</span>
@@ -102,9 +103,10 @@
     </div>
   </section>
 
-  <section class="section">
+  <section class="section section--flush">
     <div class="container">
-      <div class="post-list" id="postList" aria-live="polite" aria-busy="true">
+      <p class="list-count" id="postCount" hidden></p>
+      <div class="pcard-grid" id="postList" aria-live="polite" aria-busy="true">
         <p class="state state--loading">正在载入文章…</p>
       </div>
     </div>

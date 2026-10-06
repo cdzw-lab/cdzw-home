@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-06T01:52:52.136Z",
+  "generated": "2026-10-06T02:17:03.060Z",
   "posts": [
     {
       "slug": "hello-world",
@@ -7,6 +7,7 @@
       "title": "博客开张",
       "date": "2026-10-06",
       "summary": "这个博客怎么运作：写 Markdown、跑一条命令、推送。",
+      "chars": 542,
       "tags": [
         "站点",
         "说明"
@@ -18,6 +19,7 @@
       "title": "Markdown 语法速查",
       "date": "2026-10-05",
       "summary": "本站 Markdown 渲染器支持的全部语法，一页看完。",
+      "chars": 653,
       "tags": [
         "参考",
         "Markdown"

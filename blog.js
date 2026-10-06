@@ -9,7 +9,7 @@
   var MANIFEST = 'posts.json';
   var WORDS_PER_MIN = 350;   // 中文阅读速度，字/分钟
 
-  function $(sel) { return document.querySelector(sel); }
+  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
 
   function esc(s) {
     return String(s == null ? '' : s)
@@ -41,12 +41,36 @@
 
   function fmtDate(d) {
     var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(d || ''));
-    return m ? m[1] + '-' + m[2] + '-' + m[3] : String(d || '');
+    return m ? m[1] + '.' + m[2] + '.' + m[3] : String(d || '');
   }
 
-  function readingMinutes(text) {
-    var chars = String(text).replace(/\s/g, '').length;
-    return Math.max(1, Math.round(chars / WORDS_PER_MIN));
+  function readingMinutes(chars) {
+    var n = Number(chars) || 0;
+    return n > 0 ? Math.max(1, Math.round(n / WORDS_PER_MIN)) : 0;
+  }
+
+  // 配色：由 slug 稳定地挑一组色相，保证多篇文章之间颜色可区分，
+  // 同时都落在站点本身的冷色语言里（蓝 / 青 / 紫 / 绿松）。
+  // 直接用模 360 的哈希在这两个 slug 上会撞色，所以走精选调色板。
+  var PALETTE = [
+    [212, 258], [188, 216], [264, 300], [168, 196],
+    [232, 270], [152, 180], [292, 326], [198, 236]
+  ];
+  function huePair(slug) {
+    var s = String(slug), h = 2166136261;          // FNV-1a
+    for (var i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = (h * 16777619) >>> 0;
+    }
+    // 必须取高位：FNV-1a 的低位在 % 8 下分布极差（实测 1000 个样本
+    // 会出现 23/446 的两极分布，且这两篇真实文章直接撞色）。
+    // 改用 >>> 24 之后分布接近理想值。
+    return PALETTE[(h >>> 24) % PALETTE.length];
+  }
+
+  function firstGlyph(title) {
+    var t = String(title || '').trim();
+    return t ? t.charAt(0).toUpperCase() : '文';
   }
 
   function stateBox(kind, title, detail) {
@@ -56,27 +80,31 @@
            '</div>';
   }
 
-  function tagList(tags) {
-    if (!tags.length) return '';
-    return '<ul class="post__tags">' + tags.map(function (t) {
-      return '<li>' + esc(t) + '</li>';
-    }).join('') + '</ul>';
-  }
-
   /* ===================================================
      列表页
      =================================================== */
   function cardHtml(post, i) {
     var tags = tagsOf(post);
-    return '<a class="post-card" href="post.html?p=' + encodeURIComponent(post.slug) + '" style="--i:' + i + '">' +
-             '<div class="post-card__meta">' +
-               '<time datetime="' + esc(post.date) + '">' + esc(fmtDate(post.date)) + '</time>' +
-               (tags.length ? '<span class="post-card__sep">·</span><span>' + esc(tags.join(' / ')) + '</span>' : '') +
-             '</div>' +
-             '<h2 class="post-card__title">' + esc(post.title || post.slug) + '</h2>' +
-             (post.summary ? '<p class="post-card__summary">' + esc(post.summary) + '</p>' : '') +
-             '<span class="post-card__more">阅读全文' +
-               '<svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>' +
+    var pair = huePair(post.slug);
+    var mins = readingMinutes(post.chars);
+
+    return '<a class="pcard" href="post.html?p=' + encodeURIComponent(post.slug) + '"' +
+             ' style="--h1:' + pair[0] + ';--h2:' + pair[1] + ';--i:' + i + '">' +
+             '<span class="pcard__art" aria-hidden="true">' +
+               '<span class="pcard__mark">' + esc(firstGlyph(post.title || post.slug)) + '</span>' +
+             '</span>' +
+             '<span class="pcard__body">' +
+               '<span class="pcard__meta">' +
+                 '<time datetime="' + esc(post.date) + '">' + esc(fmtDate(post.date)) + '</time>' +
+                 (mins ? '<i class="pcard__sep"></i><span>' + mins + ' 分钟</span>' : '') +
+               '</span>' +
+               '<span class="pcard__title">' + esc(post.title || post.slug) + '</span>' +
+               (post.summary ? '<span class="pcard__summary">' + esc(post.summary) + '</span>' : '') +
+               (tags.length
+                 ? '<span class="pcard__tags">' + tags.map(function (t) {
+                     return '<em>' + esc(t) + '</em>';
+                   }).join('') + '</span>'
+                 : '') +
              '</span>' +
            '</a>';
   }
@@ -87,13 +115,18 @@
 
     get(MANIFEST, true).then(function (data) {
       var posts = (data && data.posts) || [];
-
       posts.sort(function (a, b) {
         var d = String(b.date || '').localeCompare(String(a.date || ''));
         return d !== 0 ? d : String(a.slug).localeCompare(String(b.slug));
       });
 
       box.removeAttribute('aria-busy');
+
+      var counter = document.getElementById('postCount');
+      if (counter && posts.length) {
+        counter.textContent = '共 ' + posts.length + ' 篇';
+        counter.hidden = false;
+      }
 
       if (!posts.length) {
         box.innerHTML = stateBox('empty', '还没有文章', '第一篇正在路上。');
@@ -103,7 +136,7 @@
     }).catch(function (err) {
       box.removeAttribute('aria-busy');
       box.innerHTML = stateBox('error', '文章列表载入失败',
-        err && err.status === 404 ? '找不到 posts.json，可能是还没有生成文章清单。' : String(err.message || err));
+        err && err.status === 404 ? '找不到 posts.json，可能还没有生成文章清单。' : String(err.message || err));
     });
 
     return true;
@@ -117,12 +150,45 @@
     return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
   }
 
-  function addHeadingAnchors(root) {
+  // 依据正文标题生成目录，并跟随滚动高亮当前小节
+  function buildToc(root) {
     var heads = root.querySelectorAll('h2, h3');
+    var aside = document.getElementById('postToc');
+    var list = document.getElementById('tocList');
+    if (!aside || !list || heads.length < 2) return;
+
+    var html = '';
     Array.prototype.forEach.call(heads, function (h, i) {
-      if (!h.id) h.id = 's' + (i + 1);
+      h.id = 's' + (i + 1);
+      html += '<li class="toc__item toc__item--' + h.tagName.toLowerCase() + '">' +
+                '<a href="#' + h.id + '">' + esc(h.textContent) + '</a></li>';
     });
-    return heads.length;
+    list.innerHTML = html;
+    aside.hidden = false;
+
+    var links = list.querySelectorAll('a');
+    // 页面顶部还没有标题进入判定带，先把首项点亮
+    if (links.length) links[0].classList.add('is-active');
+
+    if (!('IntersectionObserver' in window)) return;
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        Array.prototype.forEach.call(links, function (a) {
+          a.classList.toggle('is-active', a.getAttribute('href') === '#' + e.target.id);
+        });
+      });
+    }, { rootMargin: '-92px 0px -58% 0px', threshold: 0 });
+    Array.prototype.forEach.call(heads, function (h) { spy.observe(h); });
+  }
+
+  function pagerLink(label, post) {
+    var pair = huePair(post.slug);
+    return '<a class="pager__item" href="post.html?p=' + encodeURIComponent(post.slug) + '"' +
+             ' style="--h1:' + pair[0] + ';--h2:' + pair[1] + '">' +
+             '<span class="pager__label">' + esc(label) + '</span>' +
+             '<span class="pager__title">' + esc(post.title || post.slug) + '</span>' +
+           '</a>';
   }
 
   function renderPost() {
@@ -141,15 +207,8 @@
     }
 
     var slug = slugFromUrl();
-    if (!slug) {
-      fail('没有指定文章', '请从博客列表进入。');
-      return true;
-    }
-
-    if (!window.MarkdownLite) {
-      fail('渲染器未载入', 'md.js 没有成功加载。');
-      return true;
-    }
+    if (!slug) { fail('没有指定文章', '请从博客列表进入。'); return true; }
+    if (!window.MarkdownLite) { fail('渲染器未载入', 'md.js 没有成功加载。'); return true; }
 
     get(MANIFEST, true).then(function (data) {
       var posts = (data && data.posts) || [];
@@ -166,24 +225,28 @@
       var post = posts[idx];
       return get(post.file, false).then(function (raw) {
         var parsed = window.MarkdownLite.splitFrontMatter(raw);
-        var html = window.MarkdownLite.render(parsed.body);
+        bodyEl.innerHTML = window.MarkdownLite.render(parsed.body);
 
-        bodyEl.innerHTML = html;
-        addHeadingAnchors(bodyEl);
+        var pair = huePair(post.slug);
+        article.style.setProperty('--h1', pair[0]);
+        article.style.setProperty('--h2', pair[1]);
+
+        buildToc(bodyEl);
 
         var tags = tagsOf(post);
-        var mins = readingMinutes(bodyEl.textContent || '');
+        var mins = readingMinutes(post.chars || (bodyEl.textContent || '').replace(/\s/g, '').length);
 
         header.innerHTML =
-          '<div class="post__meta">' +
+          '<p class="post__meta">' +
             '<time datetime="' + esc(post.date) + '">' + esc(fmtDate(post.date)) + '</time>' +
-            '<span class="post__sep">·</span>' +
-            '<span class="post__read">' +
-              '<svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>' + mins + ' 分钟' +
-            '</span>' +
-          '</div>' +
+            (mins ? '<i class="post__sep"></i><span>' + mins + ' 分钟阅读</span>' : '') +
+          '</p>' +
           '<h1 class="post__title">' + esc(post.title || post.slug) + '</h1>' +
-          tagList(tags);
+          (tags.length
+            ? '<ul class="post__tags">' + tags.map(function (t) {
+                return '<li>' + esc(t) + '</li>';
+              }).join('') + '</ul>'
+            : '');
 
         document.title = (post.title || post.slug) + ' | 超导智网';
 
@@ -195,12 +258,9 @@
             '?p=' + encodeURIComponent(post.slug));
         }
 
-        // 较新 / 较早，而不是含糊的「上一篇 / 下一篇」
-        var newer = posts[idx - 1];
-        var older = posts[idx + 1];
         var links = [];
-        if (newer) links.push(pagerLink('较新一篇', newer));
-        if (older) links.push(pagerLink('较早一篇', older));
+        if (posts[idx - 1]) links.push(pagerLink('较新一篇', posts[idx - 1]));
+        if (posts[idx + 1]) links.push(pagerLink('较早一篇', posts[idx + 1]));
         if (links.length) {
           pager.innerHTML = links.join('');
           pager.hidden = false;
@@ -210,23 +270,12 @@
         article.hidden = false;
       });
     }).catch(function (err) {
-      if (err && err.notFound) {
-        fail('找不到这篇文章', '链接可能已经失效，或者文章被重命名了。');
-      } else if (err && err.status === 404) {
-        fail('文章文件缺失', 'posts.json 里记录了这个条目，但对应的 .md 文件不存在。');
-      } else {
-        fail('文章载入失败', String((err && err.message) || err));
-      }
+      if (err && err.notFound) fail('找不到这篇文章', '链接可能已经失效，或者文章被重命名了。');
+      else if (err && err.status === 404) fail('文章文件缺失', 'posts.json 里记录了这个条目，但对应的 .md 文件不存在。');
+      else fail('文章载入失败', String((err && err.message) || err));
     });
 
     return true;
-  }
-
-  function pagerLink(label, post) {
-    return '<a class="post-pager__item" href="post.html?p=' + encodeURIComponent(post.slug) + '">' +
-             '<span class="post-pager__label">' + esc(label) + '</span>' +
-             '<span class="post-pager__title">' + esc(post.title || post.slug) + '</span>' +
-           '</a>';
   }
 
   /* ===================================================
@@ -237,9 +286,6 @@
     renderList();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 })();

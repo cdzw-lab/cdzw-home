@@ -55,6 +55,7 @@ for (const file of files) {
     title: meta.title || slug,
     date: meta.date || '',
     summary: meta.summary || '',
+    chars: parsed.body.replace(/\s/g, '').length,
     tags: meta.tags
       ? meta.tags.split(/[,，]/).map(function (t) { return t.trim(); }).filter(Boolean)
       : []
