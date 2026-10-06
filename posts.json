@@ -2,18 +2,6 @@
   "generated": "2026-10-06T02:57:09.702Z",
   "posts": [
     {
-      "slug": "hello-world",
-      "file": "posts/hello-world.md",
-      "title": "博客开张",
-      "date": "2026-10-06",
-      "summary": "这个博客怎么运作：写 Markdown、跑一条命令、推送。",
-      "chars": 541,
-      "tags": [
-        "站点",
-        "说明"
-      ]
-    },
-    {
       "slug": "model-rules",
       "file": "posts/model-rules.md",
       "title": "软件定义计算机的理论模型与核心法则",
