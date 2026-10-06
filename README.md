@@ -53,13 +53,15 @@ tags: 标签一, 标签二
 
 ### 本地预览
 
+**双击 `tools/preview.command`**（macOS）会自动起服务并打开浏览器。也可以在终端里跑：
+
 ```bash
 node tools/serve.mjs          # http://127.0.0.1:8080/
 ```
 
-> ⚠️ 本地预览必须走 HTTP。文章是页面用 `fetch()` 读取 `.md` 之后渲染的，
-> 浏览器会拦截 `file://` 下的 fetch —— 直接双击打开 `blog.html` 会看不到任何文章。
-> 部署到 GitHub Pages 之后没有这个问题。
+> ⚠️ 不要直接双击 `blog.html`。文章是页面用 `fetch()` 读取 `.md` 之后渲染的，
+> 浏览器会拦截 `file://` 下的 fetch —— 那样只会看到「文章列表载入失败」。
+> 部署到 GitHub Pages 后没有这个限制。
 
 ### 目录结构
 

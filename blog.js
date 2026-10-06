@@ -80,6 +80,18 @@
            '</div>';
   }
 
+  // 把底层错误翻译成使用者能照着做的提示。
+  // 最常见的一种：直接双击打开 HTML（file://）时浏览器会拦截 fetch，
+  // 只抛出 "Failed to fetch" —— 对使用者完全没有信息量。
+  function describeError(err) {
+    if (window.location.protocol === 'file:') {
+      return '浏览器不允许页面在 file:// 下读取本地数据文件。' +
+             '请在仓库根目录运行 node tools/serve.mjs（或双击 tools/preview.command），' +
+             '再打开 http://127.0.0.1:8080/ 预览。部署到 GitHub Pages 后没有这个限制。';
+    }
+    return String((err && err.message) || err);
+  }
+
   /* ===================================================
      列表页
      =================================================== */
@@ -136,7 +148,9 @@
     }).catch(function (err) {
       box.removeAttribute('aria-busy');
       box.innerHTML = stateBox('error', '文章列表载入失败',
-        err && err.status === 404 ? '找不到 posts.json，可能还没有生成文章清单。' : String(err.message || err));
+        err && err.status === 404
+          ? '找不到 posts.json，可能还没有生成文章清单（运行 node tools/build-posts.mjs）。'
+          : describeError(err));
     });
 
     return true;
@@ -272,7 +286,7 @@
     }).catch(function (err) {
       if (err && err.notFound) fail('找不到这篇文章', '链接可能已经失效，或者文章被重命名了。');
       else if (err && err.status === 404) fail('文章文件缺失', 'posts.json 里记录了这个条目，但对应的 .md 文件不存在。');
-      else fail('文章载入失败', String((err && err.message) || err));
+      else fail('文章载入失败', describeError(err));
     });
 
     return true;
