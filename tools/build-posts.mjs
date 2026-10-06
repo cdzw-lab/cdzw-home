@@ -42,6 +42,14 @@ export function buildPosts(options) {
     const meta = parsed.meta || {};
     const slug = basename(file, '.md');
 
+    // front matter 里写 draft: true 就不发布，但文件保留在仓库里。
+    // 这样比手工从 posts.json 里删条目可靠 —— 手工改动会被下次构建覆盖。
+    const draft = String(meta.draft || '').toLowerCase();
+    if (draft === 'true' || draft === 'yes' || draft === '1') {
+      say('  (草稿，跳过) ' + file);
+      continue;
+    }
+
     if (!meta.title) problems.push(file + ' 缺少 title');
     if (!meta.date) problems.push(file + ' 缺少 date');
     else if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date)) {
