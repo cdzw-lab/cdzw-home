@@ -49,14 +49,11 @@
     return n > 0 ? Math.max(1, Math.round(n / WORDS_PER_MIN)) : 0;
   }
 
-  // 配色：由 slug 稳定地挑一组色相，保证多篇文章之间颜色可区分，
-  // 同时都落在站点本身的冷色语言里（蓝 / 青 / 紫 / 绿松）。
-  // 直接用模 360 的哈希在这两个 slug 上会撞色，所以走精选调色板。
-  var PALETTE = [
-    [212, 258], [188, 216], [264, 300], [168, 196],
-    [232, 270], [152, 180], [292, 326], [198, 236]
-  ];
-  function huePair(slug) {
+  // 卡片视觉是纯色块，所以色相必须彼此拉开，否则相邻文章看起来一样。
+  // 取值只落在品牌的两端：暖色 8~45°（朱红 / 橙 / 琥珀）
+  // 与冷绿 140~168°（绿 / 薄荷），对应 blockcell 的 primary #ea580c 与 --cyber #00ff9d。
+  var PALETTE = [8, 21, 35, 45, 140, 150, 157, 168];
+  function hueOf(slug) {
     var s = String(slug), h = 2166136261;          // FNV-1a
     for (var i = 0; i < s.length; i++) {
       h ^= s.charCodeAt(i);
@@ -103,11 +100,11 @@
      =================================================== */
   function cardHtml(post, i) {
     var tags = tagsOf(post);
-    var pair = huePair(post.slug);
+    var hue = hueOf(post.slug);
     var mins = readingMinutes(post.chars);
 
     return '<a class="pcard" href="' + postHref(post.slug) + '"' +
-             ' style="--h1:' + pair[0] + ';--h2:' + pair[1] + ';--i:' + i + '">' +
+             ' style="--h1:' + hue + ';--i:' + i + '">' +
              '<span class="pcard__art" aria-hidden="true">' +
                '<span class="pcard__mark">' + esc(firstGlyph(post.title || post.slug)) + '</span>' +
              '</span>' +
@@ -234,9 +231,9 @@
   }
 
   function pagerLink(label, post) {
-    var pair = huePair(post.slug);
+    var hue = hueOf(post.slug);
     return '<a class="pager__item" href="' + postHref(post.slug) + '"' +
-             ' style="--h1:' + pair[0] + ';--h2:' + pair[1] + '">' +
+             ' style="--h1:' + hue + '">' +
              '<span class="pager__label">' + esc(label) + '</span>' +
              '<span class="pager__title">' + esc(post.title || post.slug) + '</span>' +
            '</a>';
@@ -279,9 +276,7 @@
         bodyEl.innerHTML = window.MarkdownLite.render(parsed.body);
         fixRelativeImageUrls(bodyEl, post.file);
 
-        var pair = huePair(post.slug);
-        article.style.setProperty('--h1', pair[0]);
-        article.style.setProperty('--h2', pair[1]);
+        article.style.setProperty('--h1', hueOf(post.slug));
 
         buildToc(bodyEl);
 

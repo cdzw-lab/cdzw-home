@@ -37,7 +37,7 @@
 
     // 两个 media 变体同写，确保地址栏配色始终跟随用户选择
     $$('meta[name="theme-color"]').forEach(function (meta) {
-      meta.setAttribute('content', isLight ? '#ffffff' : '#05070f');
+      meta.setAttribute('content', isLight ? '#ffffff' : '#05080f');
     });
 
     if (persist) store(THEME_KEY, isLight ? 'light' : 'dark');
