@@ -216,6 +216,23 @@
     Array.prototype.forEach.call(heads, function (h) { spy.observe(h); });
   }
 
+  // markdown 里的相对地址是相对 .md 文件写的（图片就放在 posts/ 下），
+  // 但文章页位于站点根目录，浏览器会把这些地址解析到根上，导致图片 404。
+  // 这里统一补上 posts/ 前缀，让作者直接写文件名即可。
+  // 只处理 <img>：站内页面链接用的是 post.html#/slug 这类根目录路径，不能改写。
+  function fixRelativeImageUrls(root, postFile) {
+    var dir = String(postFile).replace(/[^/]*$/, '');   // 'posts/'
+    if (!dir) return;
+
+    Array.prototype.forEach.call(root.querySelectorAll('img[src]'), function (img) {
+      var v = img.getAttribute('src') || '';
+      if (!v) return;
+      if (/^[a-z][a-z0-9+.-]*:/i.test(v)) return;        // http: data: 等
+      if (v.charAt(0) === '/' || v.slice(0, 2) === '//') return;
+      img.setAttribute('src', dir + v.replace(/^\.\//, ''));
+    });
+  }
+
   function pagerLink(label, post) {
     var pair = huePair(post.slug);
     return '<a class="pager__item" href="' + postHref(post.slug) + '"' +
@@ -260,6 +277,7 @@
       return get(post.file, false).then(function (raw) {
         var parsed = window.MarkdownLite.splitFrontMatter(raw);
         bodyEl.innerHTML = window.MarkdownLite.render(parsed.body);
+        fixRelativeImageUrls(bodyEl, post.file);
 
         var pair = huePair(post.slug);
         article.style.setProperty('--h1', pair[0]);

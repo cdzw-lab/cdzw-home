@@ -22,11 +22,9 @@ tags: 理论模型, 核心法则
 
 ### 金字塔计算机模型
 
-<div align="center">
 
-![金字塔](./jzt.jpg)
+![金字塔](./images/jzt.jpg)
 
-</div>
 
 **模型说明：**
 
@@ -46,11 +44,9 @@ tags: 理论模型, 核心法则
 
 ### 对等网络
 
-<div align="center">
+![mesh-network](./images/mesh.jpg)
 
-![mesh-network](./mesh.jpg)
 
-</div>
 
 1. 计算机的各级系统都可以视作是一个网络，这是一种具有普适性的基础原理；
 2. 芯片内部的核心可以组成一个网络，甚至有专门的 NoC，也就是片上网络；

@@ -1612,6 +1612,27 @@ a.contact-card:hover .contact-card__go {
   background: var(--surface);
 }
 
+/* ::: 提示框 */
+.prose .md-box {
+  margin: 1.6em 0;
+  padding: 4px 18px;
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface);
+}
+.prose .md-box__title {
+  margin: 14px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+.prose .md-box--info    { border-left-color: var(--accent); }
+.prose .md-box--tip     { border-left-color: #34d399; }
+.prose .md-box--warning { border-left-color: #fbbf24; }
+.prose .md-box--danger  { border-left-color: #f87171; }
+.prose .md-box--note    { border-left-color: var(--muted); }
+
 .md-table-wrap {
   margin: 1.6em 0;
   border: 1px solid var(--border);

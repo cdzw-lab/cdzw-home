@@ -51,7 +51,13 @@ const syntax = [
   ['粗体中间嵌斜体',     '**a *b* c**',                           '<strong>a <em>b</em> c</strong>'],
   ['同行多个粗体',       '**a** 和 **b**',                        '<strong>a</strong> 和 <strong>b</strong>'],
   ['乘法不误判',         '2 * 3 * 4',                             '2 * 3 * 4'],
-  ['下划线文件名不误判', 'file_name_with_underscores',            'file_name_with_underscores']
+  ['下划线文件名不误判', 'file_name_with_underscores',            'file_name_with_underscores'],
+
+  // ::: 提示框
+  ['info 提示框',        ':::info 标题\n正文\n:::',                    '<div class="md-box md-box--info"><p class="md-box__title">标题</p>'],
+  ['warning 提示框',     ':::warning\n小心\n:::',                       'md-box--warning'],
+  ['未知类型回退 note',  ':::whatever\n内容\n:::',                      'md-box--note'],
+  ['提示框内含 markdown',':::tip 提示\n**粗体**\n:::',                  '<strong>粗体</strong>']
 ];
 
 /* ---------------- 安全用例（必须挡住） ---------------- */
@@ -116,9 +122,10 @@ for (const [name, input, expected] of urlCases) {
 
 /* ---------------- 不得残留字面标记 ---------------- */
 const noLeak = [
-  ['粗体星号不泄漏', '**粗体里的 *斜体***', '**'],
-  ['删除线不泄漏',   '~~删除~~',            '~~'],
-  ['行内代码不泄漏', '\`code\`',            '\`']
+  ['粗体星号不泄漏',   '**粗体里的 *斜体***',        '**'],
+  ['删除线不泄漏',     '~~删除~~',                   '~~'],
+  ['行内代码不泄漏',   '`code`',                   '`'],
+  ['提示框记号不泄漏', ':::info 标题\n正文\n:::',  ':::']
 ];
 
 for (const [name, input, marker] of noLeak) {

@@ -49,11 +49,23 @@ const server = createServer(async (req, res) => {
       catch (e) { console.warn('自动重建 posts.json 失败：' + ((e && e.message) || e)); }
     }
 
-    const target = normalize(join(root, pathname));
+    let target = normalize(join(root, pathname));
     // 防止路径穿越
     if (target !== root && !target.startsWith(root + sep)) {
       res.writeHead(403).end('403');
       return;
+    }
+
+    // 兼容 clean-url：/post 回退到 post.html。
+    // 与 serve、GitHub Pages 等保持一致，否则本地预览 404、线上却正常，
+    // 会让人以为是代码问题而白花时间。
+    try {
+      await stat(target);
+    } catch (e) {
+      try {
+        await stat(target + '.html');
+        target = target + '.html';
+      } catch (e2) { /* 保持原样，按 404 处理 */ }
     }
 
     const info = await stat(target);

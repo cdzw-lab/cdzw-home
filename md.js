@@ -93,6 +93,7 @@
            /^\s{0,3}>/.test(line) ||
            /^\s*([-*+]|\d+[.)])\s+/.test(line) ||
            /^\s*([-*_])(\s*\1){2,}\s*$/.test(line) ||
+           /^\s*:::/.test(line) ||
            /^\s*\|.*\|\s*$/.test(line);
   }
 
@@ -167,6 +168,22 @@
         i++;
         out.push('<pre class="md-pre"' + (lang ? ' data-lang="' + escapeHtml(lang) + '"' : '') +
                  '><code>' + escapeHtml(buf.join('\n')) + '</code></pre>');
+        continue;
+      }
+
+      // ::: 提示框容器（:::info / :::tip / :::warning / :::danger / :::note）
+      var box = line.match(/^\s*:::\s*([A-Za-z]+)?\s*(.*)$/);
+      if (box) {
+        var kind = (box[1] || 'note').toLowerCase();
+        if (['info', 'tip', 'warning', 'danger', 'note'].indexOf(kind) < 0) kind = 'note';
+        var boxTitle = box[2] || '';
+        var boxBuf = [];
+        i++;
+        while (i < lines.length && !/^\s*:::\s*$/.test(lines[i])) { boxBuf.push(lines[i]); i++; }
+        i++;
+        out.push('<div class="md-box md-box--' + kind + '">' +
+                 (boxTitle ? '<p class="md-box__title">' + renderInline(escapeHtml(boxTitle)) + '</p>' : '') +
+                 render(boxBuf.join('\n')) + '</div>');
         continue;
       }
 
