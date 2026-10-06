@@ -80,6 +80,8 @@
     }
 
     if (toTop) toTop.classList.toggle('is-show', y > 620);
+
+    requestSpy();
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -220,18 +222,48 @@
      7. 导航高亮当前区块
      --------------------------------------------------- */
   var sections = $$('main section[id]');
-  if (sections.length && 'IntersectionObserver' in window) {
-    var spy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        var id = '#' + entry.target.id;
-        $$('.nav__links a').forEach(function (link) {
-          link.classList.toggle('is-active', link.getAttribute('href') === id);
-        });
-      });
-    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  var navItems = $$('.nav__links a');
+  var firstNavHref = navItems.length ? navItems[0].getAttribute('href') : null;
 
-    sections.forEach(function (section) { spy.observe(section); });
+  function setActiveNav(href) {
+    navItems.forEach(function (link) {
+      link.classList.toggle('is-active', link.getAttribute('href') === href);
+    });
+  }
+
+  // 按滚动位置判定，而不是用 IntersectionObserver 的进出事件。
+  // 旧写法只处理「进入」、忽略「离开」（if (!entry.isIntersecting) return），
+  // 于是高亮只会被点亮、永远不会熄灭：点「首页」平滑滚回顶部时途经
+  // 核心特征，它就一直被点亮了。而且 #top 不是 section[id]，
+  // 「首页」本来也不在判定范围内。
+  function updateSpy() {
+    if (!sections || !sections.length) return;
+
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var probe = y + window.innerHeight * 0.35;   // 取视口上方 35% 处当判定线
+    var current = firstNavHref;                  // 判定线还在首屏 hero 内 -> 「首页」
+
+    for (var i = 0; i < sections.length; i++) {
+      var top = sections[i].getBoundingClientRect().top + y;
+      if (top <= probe) current = '#' + sections[i].id;
+    }
+
+    // 滚到底时最后一节可能还没越过判定线，直接认定它
+    if (y + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      current = '#' + sections[sections.length - 1].id;
+    }
+
+    setActiveNav(current);
+  }
+
+  var spyPending = false;
+  function requestSpy() {
+    if (spyPending) return;
+    spyPending = true;
+    window.requestAnimationFrame(function () {
+      spyPending = false;
+      updateSpy();
+    });
   }
 
   /* ---------------------------------------------------
