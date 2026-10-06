@@ -26,3 +26,59 @@
 官网源码位于 `gh-pages` 分支，当前部署在 GitHub Pages 项目页：
 
 - 访问地址：https://cdzwlab.github.io/cdzw-home/
+
+## 博客
+
+文章放在 `posts/` 目录，用 Markdown 写，浏览器端实时渲染。
+
+### 写一篇新文章
+
+```bash
+node tools/new-post.mjs "文章标题" my-slug   # 创建 posts/my-slug.md 并自动更新清单
+node tools/build-posts.mjs                   # 手动重建清单（改了文件名或日期之后）
+```
+
+文章开头的 front matter：
+
+```yaml
+---
+title: 文章标题
+date: 2026-10-06
+summary: 列表页显示的一句话摘要
+tags: 标签一, 标签二
+---
+```
+
+`title` 和 `date` 必填，且 `date` 必须是 `YYYY-MM-DD`，否则构建时会给出警告。
+
+### 本地预览
+
+```bash
+node tools/serve.mjs          # http://127.0.0.1:8080/
+```
+
+> ⚠️ 本地预览必须走 HTTP。文章是页面用 `fetch()` 读取 `.md` 之后渲染的，
+> 浏览器会拦截 `file://` 下的 fetch —— 直接双击打开 `blog.html` 会看不到任何文章。
+> 部署到 GitHub Pages 之后没有这个问题。
+
+### 目录结构
+
+| 路径 | 作用 |
+|---|---|
+| `posts/*.md` | 文章正文 |
+| `posts.json` | 文章清单，由脚本生成，不要手改 |
+| `blog.html` | 文章列表页 |
+| `post.html?p=<slug>` | 文章详情页，slug 就是文件名去掉 `.md` |
+| `md.js` | 无依赖的 Markdown 渲染器 |
+| `tools/build-posts.mjs` | 扫描 posts/ 生成 posts.json |
+| `tools/new-post.mjs` | 新建文章骨架 |
+| `tools/serve.mjs` | 本地预览服务器 |
+| `tools/test-md.mjs` | 渲染器测试：`node tools/test-md.mjs` |
+
+### 支持的语法
+
+标题、段落、粗体、斜体、删除线、行内代码、围栏代码块、有序与无序列表（可嵌套）、
+引用、分隔线、表格、链接、图片、自动链接。
+
+为安全起见，正文里的 HTML 标签会被原样转义显示，不会执行。
+
