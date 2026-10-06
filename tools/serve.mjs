@@ -13,6 +13,7 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, normalize, extname, sep } from 'node:path';
+import { buildPosts } from './build-posts.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -40,6 +41,13 @@ const server = createServer(async (req, res) => {
   try {
     let pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
     if (pathname.endsWith('/')) pathname += 'index.html';
+
+    // 本地预览最常见的坑：新增了 posts/*.md 却忘了重建清单，页面就看不到新文章。
+    // 这里每次请求 posts.json 都顺手重建一次（几十毫秒），省掉这一步手工操作。
+    if (pathname === '/posts.json') {
+      try { buildPosts({ quiet: true }); }
+      catch (e) { console.warn('自动重建 posts.json 失败：' + ((e && e.message) || e)); }
+    }
 
     const target = normalize(join(root, pathname));
     // 防止路径穿越
@@ -73,6 +81,13 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, '127.0.0.1', () => {
+  try {
+    const r = buildPosts({ quiet: true });
+    console.log('文章清单: 已自动重建，共 ' + r.posts.length + ' 篇');
+    r.problems.forEach(function (p) { console.warn('  ⚠️  ' + p); });
+  } catch (e) {
+    console.warn('文章清单重建失败：' + ((e && e.message) || e));
+  }
   console.log('预览地址: http://127.0.0.1:' + port + '/');
   console.log('根目录  : ' + root);
   console.log('按 Ctrl+C 停止');

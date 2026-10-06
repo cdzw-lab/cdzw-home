@@ -35,8 +35,19 @@
 
 ```bash
 node tools/new-post.mjs "文章标题" my-slug   # 创建 posts/my-slug.md 并自动更新清单
-node tools/build-posts.mjs                   # 手动重建清单（改了文件名或日期之后）
 ```
+
+也可以直接在 `posts/` 下新建 `.md`，清单不必手动重建：
+
+- **本地预览**：`tools/serve.mjs` 启动时、以及每次请求 `posts.json` 时都会自动重建
+- **提交时**：`.githooks/pre-commit` 会自动重建并把 `posts.json` 一并纳入本次提交
+
+> 新克隆的仓库需要启用一次钩子：`git config core.hooksPath .githooks`
+
+需要手动重建时仍然可以跑 `node tools/build-posts.mjs`。
+
+> 文章必须**直接放在 `posts/` 根目录**。子目录里的 `.md` 不会被收录，
+> 构建时会主动提示，不会静默丢弃。
 
 文章开头的 front matter：
 

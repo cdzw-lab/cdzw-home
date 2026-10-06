@@ -1,0 +1,31 @@
+#!/bin/sh
+# 提交前自动刷新文章清单。
+# 避免「新增了 posts/*.md 却忘记重建 posts.json，导致线上看不到新文章」。
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+# GUI 客户端启动的 git 可能没有完整 PATH，需要自己找 node
+NODE="$(command -v node 2>/dev/null || true)"
+if [ -z "$NODE" ]; then
+  for c in "$HOME/Library/Application Support/fnm/aliases/default/bin/node" \
+           "$HOME/.local/share/fnm/aliases/default/bin/node" \
+           /opt/homebrew/bin/node \
+           /usr/local/bin/node; do
+    if [ -x "$c" ]; then NODE="$c"; break; fi
+  done
+fi
+
+if [ -z "$NODE" ]; then
+  echo "pre-commit: 找不到 node，跳过文章清单重建"
+  exit 0
+fi
+
+# 只在文章或解析器有改动时重建，避免每次提交都刷新 generated 时间戳
+if git diff --cached --name-only | grep -qE '^(posts/|md\.js|tools/build-posts\.mjs)'; then
+  echo "pre-commit: 刷新文章清单…"
+  "$NODE" tools/build-posts.mjs || true
+  git add posts.json
+fi
+
+exit 0
