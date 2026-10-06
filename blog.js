@@ -49,11 +49,22 @@
     return n > 0 ? Math.max(1, Math.round(n / WORDS_PER_MIN)) : 0;
   }
 
-  // 卡片视觉是纯色块，所以色相必须彼此拉开，否则相邻文章看起来一样。
-  // 取值只落在品牌的两端：暖色 8~45°（朱红 / 橙 / 琥珀）
-  // 与冷绿 140~168°（绿 / 薄荷），对应 blockcell 的 primary #ea580c 与 --cyber #00ff9d。
-  var PALETTE = [8, 21, 35, 45, 140, 150, 157, 168];
-  function hueOf(slug) {
+  // 卡片视觉是纯色块，所以色相必须彼此拉开，否则相邻文章长得一样；
+  // 色相只落在品牌两端：暖色 8~45°、冷绿 140~168°
+  // （对应 blockcell 的 primary #ea580c 与 --cyber #00ff9d）。
+  // 但纯色块下「高饱和 + 中明度」的绿会变成刺眼的荧光绿，
+  // 所以每一项都带自己的 饱和/明度：暖色保持鲜亮，绿色压暗压灰。
+  var PALETTE = [
+    [8,   76, 48],   // 朱红
+    [21,  80, 49],   // 橙
+    [35,  74, 46],   // 琥珀
+    [45,  70, 44],   // 金
+    [140, 48, 37],   // 森林绿
+    [150, 46, 39],   // 绿
+    [157, 52, 38],   // 薄荷绿
+    [168, 50, 36]    // 青绿
+  ];
+  function paletteOf(slug) {
     var s = String(slug), h = 2166136261;          // FNV-1a
     for (var i = 0; i < s.length; i++) {
       h ^= s.charCodeAt(i);
@@ -63,6 +74,11 @@
     // 会出现 23/446 的两极分布，且这两篇真实文章直接撞色）。
     // 改用 >>> 24 之后分布接近理想值。
     return PALETTE[(h >>> 24) % PALETTE.length];
+  }
+
+  // 输出成 CSS 变量，供卡片视觉与强调条共用
+  function colorVars(c) {
+    return '--h:' + c[0] + ';--s:' + c[1] + '%;--l:' + c[2] + '%;';
   }
 
   function firstGlyph(title) {
@@ -100,11 +116,11 @@
      =================================================== */
   function cardHtml(post, i) {
     var tags = tagsOf(post);
-    var hue = hueOf(post.slug);
+    var c = paletteOf(post.slug);
     var mins = readingMinutes(post.chars);
 
     return '<a class="pcard" href="' + postHref(post.slug) + '"' +
-             ' style="--h1:' + hue + ';--i:' + i + '">' +
+             ' style="' + colorVars(c) + '--i:' + i + '">' +
              '<span class="pcard__art" aria-hidden="true">' +
                '<span class="pcard__mark">' + esc(firstGlyph(post.title || post.slug)) + '</span>' +
              '</span>' +
@@ -231,9 +247,9 @@
   }
 
   function pagerLink(label, post) {
-    var hue = hueOf(post.slug);
+    var c = paletteOf(post.slug);
     return '<a class="pager__item" href="' + postHref(post.slug) + '"' +
-             ' style="--h1:' + hue + '">' +
+             ' style="' + colorVars(c) + '">' +
              '<span class="pager__label">' + esc(label) + '</span>' +
              '<span class="pager__title">' + esc(post.title || post.slug) + '</span>' +
            '</a>';
@@ -276,7 +292,10 @@
         bodyEl.innerHTML = window.MarkdownLite.render(parsed.body);
         fixRelativeImageUrls(bodyEl, post.file);
 
-        article.style.setProperty('--h1', hueOf(post.slug));
+        var c = paletteOf(post.slug);
+        article.style.setProperty('--h', c[0]);
+        article.style.setProperty('--s', c[1] + '%');
+        article.style.setProperty('--l', c[2] + '%');
 
         buildToc(bodyEl);
 

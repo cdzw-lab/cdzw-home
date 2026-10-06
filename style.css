@@ -28,6 +28,7 @@
 
   --accent:        #ea580c;
   --accent-2:      #00ff9d;
+  --accent-2-ink:  #00ff9d;   /* 正文链接用；暗底上本就够亮，无需分档 */
   --accent-3:      #f97316;
   --brand:         #ea580c;   /* 纯橙，对应 blockcell 的 primary / rust */
   --on-accent:     #ffffff;   /* 纯色底上用白字，与 blockcell 的 bg-rust text-white 一致 */
@@ -80,7 +81,13 @@
   --muted:         #6b5a4e;
 
   --accent:        #e22e12;
-  --accent-2:      #18865c;
+  /* 绿色按用途分两档。白底上要达 4.5:1，亮度上限就在原 #18865c 附近
+     （实测最亮只能到 #008a17，亮度仅高 1.2%，肉眼无差别），
+     所以「更亮的绿」只能靠放松对比度换：
+       --accent-2      装饰用（图标 / 圆点 / 图形 / 标签）3.28:1，明快
+       --accent-2-ink  正文链接用 4.64:1，保证长文阅读 */
+  --accent-2:      #0aa35c;
+  --accent-2-ink:  #09864c;
   --accent-3:      #f97316;
   --brand:         #e22e12;
   --on-accent:     #ffffff;
@@ -1215,8 +1222,8 @@ a.contact-card:hover .contact-card__go {
 }
 .pcard:hover {
   transform: translateY(-6px);
-  border-color: hsla(var(--h1), 70%, 60%, .55);
-  box-shadow: 0 28px 60px -34px hsla(var(--h1), 90%, 58%, .85);
+  border-color: hsla(var(--h), var(--s), var(--l), .55);
+  box-shadow: 0 28px 60px -34px hsla(var(--h), var(--s), var(--l), .85);
 }
 
 /* 每篇的专属视觉：色相由 slug 推导，作者不需要准备配图 */
@@ -1225,7 +1232,7 @@ a.contact-card:hover .contact-card__go {
   display: block;
   height: 168px;
   overflow: hidden;
-  background: hsl(var(--h1), 80%, 50%);
+  background: hsl(var(--h), var(--s), var(--l));
 }
 .pcard__art::before {
   content: "";
@@ -1353,7 +1360,7 @@ a.contact-card:hover .contact-card__go {
   width: 78px;
   height: 3px;
   border-radius: 2px;
-  background: hsl(var(--h1), 82%, 55%);
+  background: hsl(var(--h), var(--s), var(--l));
 }
 .post__meta {
   display: flex;
@@ -1462,11 +1469,11 @@ a.contact-card:hover .contact-card__go {
   top: 0;
   bottom: 0;
   width: 3px;
-  background: hsl(var(--h1), 82%, 55%);
+  background: hsl(var(--h), var(--s), var(--l));
 }
 .pager__item:hover {
   transform: translateY(-3px);
-  border-color: hsla(var(--h1), 60%, 55%, .5);
+  border-color: hsla(var(--h), var(--s), var(--l), .5);
 }
 .pager__label {
   font-family: var(--mono);
@@ -1530,7 +1537,7 @@ a.contact-card:hover .contact-card__go {
 .prose del { color: var(--muted); }
 
 .prose a {
-  color: var(--accent-2);
+  color: var(--accent-2-ink);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
