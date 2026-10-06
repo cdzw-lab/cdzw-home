@@ -80,12 +80,26 @@ export function buildPosts(options) {
     return d !== 0 ? d : a.slug.localeCompare(b.slug);
   });
 
-  writeFileSync(outFile, JSON.stringify({ generated: new Date().toISOString(), posts: posts }, null, 2) + '\n');
+  // 内容没变就不重写。否则 generated 时间戳每次都会变，
+  // posts.json 会永远显示为「已修改」，制造无意义的 diff。
+  const next = { generated: new Date().toISOString(), posts: posts };
+  let before = null;
+  try { before = JSON.parse(readFileSync(outFile, 'utf8')); } catch (e) { /* 首次生成 */ }
 
-  say('已生成 posts.json：' + posts.length + ' 篇文章');
-  posts.forEach(function (p) {
-    say('  ' + (p.date || '(无日期)') + '  ' + p.slug + '  ' + p.title);
-  });
+  let changed = true;
+  if (before && JSON.stringify(before.posts) === JSON.stringify(next.posts)) {
+    changed = false;
+  } else {
+    writeFileSync(outFile, JSON.stringify(next, null, 2) + '\n');
+  }
+
+  say(changed ? '已更新 posts.json：' + posts.length + ' 篇文章'
+              : 'posts.json 无变化，' + posts.length + ' 篇文章');
+  if (changed) {
+    posts.forEach(function (p) {
+      say('  ' + (p.date || '(无日期)') + '  ' + p.slug + '  ' + p.title);
+    });
+  }
 
   if (problems.length) {
     warn('');
@@ -93,7 +107,7 @@ export function buildPosts(options) {
     problems.forEach(function (p) { warn('  - ' + p); });
   }
 
-  return { posts: posts, problems: problems };
+  return { posts: posts, problems: problems, changed: changed };
 }
 
 // 只在被当作脚本直接运行时才执行（被 import 时不动）
