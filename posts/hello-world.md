@@ -47,4 +47,4 @@ tags: 标签一, 标签二
 - 正文里的 HTML 不会被执行，会被原样转义显示
 - 单个换行会渲染成换行，段落之间记得空一行
 
-想看看支持哪些语法，可以直接读 [Markdown 语法速查](post.html?p=markdown-guide)。
+想看看支持哪些语法，可以直接读 [Markdown 语法速查](post.html#/markdown-guide)。

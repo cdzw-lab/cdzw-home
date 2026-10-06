@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-06T02:17:03.060Z",
+  "generated": "2026-10-06T02:41:01.908Z",
   "posts": [
     {
       "slug": "hello-world",
@@ -7,7 +7,7 @@
       "title": "博客开张",
       "date": "2026-10-06",
       "summary": "这个博客怎么运作：写 Markdown、跑一条命令、推送。",
-      "chars": 542,
+      "chars": 541,
       "tags": [
         "站点",
         "说明"

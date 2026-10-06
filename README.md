@@ -70,12 +70,18 @@ node tools/serve.mjs          # http://127.0.0.1:8080/
 | `posts/*.md` | 文章正文 |
 | `posts.json` | 文章清单，由脚本生成，不要手改 |
 | `blog.html` | 文章列表页 |
-| `post.html?p=<slug>` | 文章详情页，slug 就是文件名去掉 `.md` |
+| `post.html#/<slug>` | 文章详情页，slug 就是文件名去掉 `.md` |
 | `md.js` | 无依赖的 Markdown 渲染器 |
 | `tools/build-posts.mjs` | 扫描 posts/ 生成 posts.json |
 | `tools/new-post.mjs` | 新建文章骨架 |
 | `tools/serve.mjs` | 本地预览服务器 |
 | `tools/test-md.mjs` | 渲染器测试：`node tools/test-md.mjs` |
+
+> 文章标识用 URL fragment（`#/slug`）而不是查询串（`?p=slug`）。
+> 因为很多静态服务器会做 clean-url 跳转——`/post.html?p=x` 会 **301 到 `/post`**，
+> 查询串在跳转中被丢弃，页面就变成「没有指定文章」。fragment 由浏览器保留，
+> 能安全穿过 301，因此在 GitHub Pages、`serve`、`python -m http.server` 上都一致。
+> 旧的 `?p=` 链接仍然兼容。
 
 ### 支持的语法
 

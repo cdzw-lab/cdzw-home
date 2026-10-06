@@ -89,7 +89,13 @@
              '请在仓库根目录运行 node tools/serve.mjs（或双击 tools/preview.command），' +
              '再打开 http://127.0.0.1:8080/ 预览。部署到 GitHub Pages 后没有这个限制。';
     }
-    return String((err && err.message) || err);
+    // 带上「请求了哪个地址、失败成什么样」，否则一句 Failed to fetch 无从排查
+    var detail = String((err && err.message) || err);
+    var where = '';
+    try {
+      where = ' ｜ 请求地址 ' + new URL(MANIFEST, window.location.href).href;
+    } catch (e) {}
+    return detail + where + ' ｜ 若地址无误，请强制刷新（Cmd+Shift+R）排除缓存。';
   }
 
   /* ===================================================
@@ -100,7 +106,7 @@
     var pair = huePair(post.slug);
     var mins = readingMinutes(post.chars);
 
-    return '<a class="pcard" href="post.html?p=' + encodeURIComponent(post.slug) + '"' +
+    return '<a class="pcard" href="' + postHref(post.slug) + '"' +
              ' style="--h1:' + pair[0] + ';--h2:' + pair[1] + ';--i:' + i + '">' +
              '<span class="pcard__art" aria-hidden="true">' +
                '<span class="pcard__mark">' + esc(firstGlyph(post.title || post.slug)) + '</span>' +
@@ -159,9 +165,23 @@
   /* ===================================================
      文章页
      =================================================== */
+  // 文章标识优先放在 URL fragment 里，而不是查询串。
+  // 原因：很多静态服务器会做 clean-url 跳转（/post.html?p=x → 301 → /post），
+  // 查询串会在跳转中丢掉，而 fragment 由浏览器保留，能安全穿过 301。
+  // 仍兼容 ?p= 形式，避免已分享出去的旧链接失效。
+  function postHref(slug) {
+    return 'post.html#/' + encodeURIComponent(slug);
+  }
+
   function slugFromUrl() {
     var m = /[?&]p=([^&]*)/.exec(window.location.search);
-    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+    if (m) return decodeURIComponent(m[1].replace(/\+/g, ' '));
+
+    var h = window.location.hash.replace(/^#/, '');
+    if (!h) return '';
+    if (h.charAt(0) === '/') h = h.slice(1);
+    if (/^s\d+$/.test(h)) return '';   // 这是正文标题的锚点，不是文章
+    return decodeURIComponent(h);
   }
 
   // 依据正文标题生成目录，并跟随滚动高亮当前小节
@@ -198,7 +218,7 @@
 
   function pagerLink(label, post) {
     var pair = huePair(post.slug);
-    return '<a class="pager__item" href="post.html?p=' + encodeURIComponent(post.slug) + '"' +
+    return '<a class="pager__item" href="' + postHref(post.slug) + '"' +
              ' style="--h1:' + pair[0] + ';--h2:' + pair[1] + '">' +
              '<span class="pager__label">' + esc(label) + '</span>' +
              '<span class="pager__title">' + esc(post.title || post.slug) + '</span>' +
@@ -269,7 +289,7 @@
         var canon = document.querySelector('link[rel="canonical"]');
         if (canon && /^https?:$/.test(window.location.protocol)) {
           canon.setAttribute('href', window.location.origin + window.location.pathname +
-            '?p=' + encodeURIComponent(post.slug));
+            '#/' + encodeURIComponent(post.slug));
         }
 
         var links = [];
