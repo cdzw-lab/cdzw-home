@@ -23,10 +23,10 @@
 
 ## 官网
 
-官网源码位于 `gh-pages` 分支。仓库名为 `cdzw-lab.github.io`，
+官网源码位于 `gh-pages` 分支。仓库名为 `cdzwai.github.io`，
 因此这是**组织主页**，站点直接部署在根路径：
 
-- 访问地址：https://cdzw-lab.github.io/
+- 访问地址：https://cdzwai.github.io/
 
 ## 博客
 
