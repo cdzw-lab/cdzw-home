@@ -1181,12 +1181,20 @@ a.contact-card:hover .contact-card__go {
   overflow: hidden;
   isolation: isolate;
 }
-.page-head__inner { position: relative; z-index: 1; max-width: 720px; }
+/* 这个元素同时挂了 .container（提供 max-width + margin-inline:auto 居中容器）
+   和 .page-head__inner。若在这里再写 max-width: 720px，整块会被 .container 的
+   auto 外边距居中，标题就不在容器左边缘了。
+   所以宽度限制下沉到文字本身，块本身仍是容器宽度。 */
+.page-head__inner { position: relative; z-index: 1; }
 .page-head h1 {
+  max-width: 720px;
   font-size: clamp(34px, 5vw, 56px);
   letter-spacing: -.035em;
 }
-.page-head .lede { margin-top: 18px; }
+.page-head .lede {
+  max-width: 720px;
+  margin-top: 18px;
+}
 
 /* ---------- 篇数 ---------- */
 .list-count {
